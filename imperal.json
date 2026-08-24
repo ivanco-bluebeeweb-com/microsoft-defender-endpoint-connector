@@ -1,0 +1,3046 @@
+{
+  "manifest_schema_version": 3,
+  "sdk_version": "5.11.0",
+  "app_id": "microsoft-defender-endpoint-connector",
+  "version": "0.1.0",
+  "name": "Microsoft Defender for Endpoint",
+  "description": "Connect your own Microsoft Defender for Endpoint tenant (Azure AD App Registration) to manage Machines, Alerts, Incidents, custom Indicators, Machine Actions (isolate/scan), Advanced Hunting queries, and Threat & Vulnerability Management.",
+  "icon": "icon.svg",
+  "actions_explicit": true,
+  "system": false,
+  "capabilities": [
+    "defender:read",
+    "defender:write"
+  ],
+  "tools": [
+    {
+      "name": "connect_defender",
+      "description": "Connect your own Microsoft Defender for Endpoint tenant by saving its Azure AD tenant/client credentials, after checking they actually work.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "defender.provider.connected"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "label": {
+            "default": "",
+            "description": "Friendly tenant label, e.g. 'Acme Corp Tenant'.",
+            "title": "Label",
+            "type": "string"
+          },
+          "tenant_id": {
+            "description": "Azure AD tenant ID (GUID) the App Registration belongs to.",
+            "title": "Tenant Id",
+            "type": "string"
+          },
+          "client_id": {
+            "description": "Azure AD Application (client) ID with WindowsDefenderATP API permissions.",
+            "title": "Client Id",
+            "type": "string"
+          },
+          "client_secret": {
+            "description": "Azure AD Application client secret value.",
+            "title": "Client Secret",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tenant_id",
+          "client_id",
+          "client_secret"
+        ],
+        "title": "ConnectDefenderParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "connection_id": {
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "tenant_id": {
+            "title": "Tenant Id",
+            "type": "string"
+          },
+          "client_id_masked": {
+            "title": "Client Id Masked",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "connection_id",
+          "label",
+          "tenant_id",
+          "client_id_masked"
+        ],
+        "title": "DefenderConnection",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.connect_defender",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    },
+    {
+      "name": "disconnect_defender",
+      "description": "Disconnect a Microsoft Defender for Endpoint tenant: deletes the saved Azure AD credentials. Nothing in Defender itself is changed.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "defender.provider.disconnected"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "description": "Saved Defender for Endpoint tenant connection ID to remove from Imperal.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "connection_id"
+        ],
+        "title": "DisconnectDefenderParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          },
+          "detail": {
+            "default": "",
+            "title": "Detail",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "ok"
+        ],
+        "title": "DeleteResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.disconnect_defender",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    },
+    {
+      "name": "list_connections",
+      "description": "List the connected Microsoft Defender for Endpoint tenants (tenant id + masked Client ID).",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {},
+        "title": "NoParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "DefenderConnection": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "connection_id": {
+                "title": "Connection Id",
+                "type": "string"
+              },
+              "label": {
+                "title": "Label",
+                "type": "string"
+              },
+              "tenant_id": {
+                "title": "Tenant Id",
+                "type": "string"
+              },
+              "client_id_masked": {
+                "title": "Client Id Masked",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "connection_id",
+              "label",
+              "tenant_id",
+              "client_id_masked"
+            ],
+            "title": "DefenderConnection",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "connections": {
+            "default": [],
+            "items": {
+              "$ref": "#/$defs/DefenderConnection"
+            },
+            "title": "Connections",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "ConnectionList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.list_connections",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    },
+    {
+      "name": "list_machines",
+      "description": "List endpoints (machines) in the connected Defender for Endpoint tenant, optionally filtered by an OData $filter.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Defender for Endpoint tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "filter_expr": {
+            "default": "",
+            "description": "Optional OData $filter, e.g. \"healthStatus eq 'Active'\".",
+            "title": "Filter Expr",
+            "type": "string"
+          },
+          "limit": {
+            "default": 50,
+            "description": "Max machines to return (1-500).",
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "ListMachinesParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "DefenderMachine": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "machine_id": {
+                "title": "Machine Id",
+                "type": "string"
+              },
+              "computer_dns_name": {
+                "title": "Computer Dns Name",
+                "type": "string"
+              },
+              "os_platform": {
+                "title": "Os Platform",
+                "type": "string"
+              },
+              "health_status": {
+                "title": "Health Status",
+                "type": "string"
+              },
+              "risk_score": {
+                "title": "Risk Score",
+                "type": "string"
+              },
+              "last_seen": {
+                "title": "Last Seen",
+                "type": "string"
+              },
+              "is_isolated": {
+                "default": false,
+                "title": "Is Isolated",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "machine_id",
+              "computer_dns_name",
+              "os_platform",
+              "health_status",
+              "risk_score",
+              "last_seen"
+            ],
+            "title": "DefenderMachine",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "machines": {
+            "default": [],
+            "items": {
+              "$ref": "#/$defs/DefenderMachine"
+            },
+            "title": "Machines",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "MachineList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.list_machines",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    },
+    {
+      "name": "get_machine",
+      "description": "Read one endpoint (machine) in full by its Defender machine id.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Defender for Endpoint tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "machine_id": {
+            "description": "Defender machine id.",
+            "title": "Machine Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "machine_id"
+        ],
+        "title": "MachineIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "machine_id": {
+            "title": "Machine Id",
+            "type": "string"
+          },
+          "computer_dns_name": {
+            "title": "Computer Dns Name",
+            "type": "string"
+          },
+          "os_platform": {
+            "title": "Os Platform",
+            "type": "string"
+          },
+          "health_status": {
+            "title": "Health Status",
+            "type": "string"
+          },
+          "risk_score": {
+            "title": "Risk Score",
+            "type": "string"
+          },
+          "last_seen": {
+            "title": "Last Seen",
+            "type": "string"
+          },
+          "is_isolated": {
+            "default": false,
+            "title": "Is Isolated",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "machine_id",
+          "computer_dns_name",
+          "os_platform",
+          "health_status",
+          "risk_score",
+          "last_seen"
+        ],
+        "title": "DefenderMachine",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.get_machine",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    },
+    {
+      "name": "isolate_machine",
+      "description": "Network-isolate a machine -- cuts it off from the network except Defender cloud traffic (and optionally Outlook/Skype/Teams for 'Selective'). The core incident-response 'stop the bleeding' action.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "defender.machine.isolated"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Defender for Endpoint tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "machine_id": {
+            "description": "Defender machine id to act on.",
+            "title": "Machine Id",
+            "type": "string"
+          },
+          "comment": {
+            "description": "Reason/comment for this action, required by the Defender API and shown in the action audit trail.",
+            "title": "Comment",
+            "type": "string"
+          },
+          "isolation_type": {
+            "default": "Full",
+            "description": "'Full' (complete network isolation) or 'Selective' (allows Outlook/Skype/Teams).",
+            "title": "Isolation Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "machine_id",
+          "comment"
+        ],
+        "title": "IsolateMachineParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "action_id": {
+            "title": "Action Id",
+            "type": "string"
+          },
+          "machine_id": {
+            "title": "Machine Id",
+            "type": "string"
+          },
+          "action_type": {
+            "title": "Action Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "status",
+          "action_id",
+          "machine_id",
+          "action_type"
+        ],
+        "title": "MachineActionResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.isolate_machine",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    },
+    {
+      "name": "unisolate_machine",
+      "description": "Release a machine from network isolation, restoring normal network access.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "defender.machine.unisolated"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Defender for Endpoint tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "machine_id": {
+            "description": "Defender machine id to act on.",
+            "title": "Machine Id",
+            "type": "string"
+          },
+          "comment": {
+            "description": "Reason/comment for this action, required by the Defender API and shown in the action audit trail.",
+            "title": "Comment",
+            "type": "string"
+          }
+        },
+        "required": [
+          "machine_id",
+          "comment"
+        ],
+        "title": "MachineActionParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "action_id": {
+            "title": "Action Id",
+            "type": "string"
+          },
+          "machine_id": {
+            "title": "Machine Id",
+            "type": "string"
+          },
+          "action_type": {
+            "title": "Action Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "status",
+          "action_id",
+          "machine_id",
+          "action_type"
+        ],
+        "title": "MachineActionResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.unisolate_machine",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    },
+    {
+      "name": "run_av_scan",
+      "description": "Trigger a Windows Defender antivirus scan (Quick or Full) on a machine.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "defender.machine.scanned"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Defender for Endpoint tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "machine_id": {
+            "description": "Defender machine id to act on.",
+            "title": "Machine Id",
+            "type": "string"
+          },
+          "comment": {
+            "description": "Reason/comment for this action, required by the Defender API and shown in the action audit trail.",
+            "title": "Comment",
+            "type": "string"
+          },
+          "scan_type": {
+            "default": "Quick",
+            "description": "'Quick' or 'Full' antivirus scan.",
+            "title": "Scan Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "machine_id",
+          "comment"
+        ],
+        "title": "RunAvScanParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "action_id": {
+            "title": "Action Id",
+            "type": "string"
+          },
+          "machine_id": {
+            "title": "Machine Id",
+            "type": "string"
+          },
+          "action_type": {
+            "title": "Action Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "status",
+          "action_id",
+          "machine_id",
+          "action_type"
+        ],
+        "title": "MachineActionResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.run_av_scan",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    },
+    {
+      "name": "stop_and_quarantine_file",
+      "description": "Stop a running process and quarantine its file on a machine, by SHA1 hash. A destructive containment action for confirmed malicious files.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "defender.machine.file_quarantined"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Defender for Endpoint tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "machine_id": {
+            "description": "Defender machine id to act on.",
+            "title": "Machine Id",
+            "type": "string"
+          },
+          "comment": {
+            "description": "Reason/comment for this action, required by the Defender API and shown in the action audit trail.",
+            "title": "Comment",
+            "type": "string"
+          }
+        },
+        "required": [
+          "machine_id",
+          "comment"
+        ],
+        "title": "MachineActionParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "action_id": {
+            "title": "Action Id",
+            "type": "string"
+          },
+          "machine_id": {
+            "title": "Machine Id",
+            "type": "string"
+          },
+          "action_type": {
+            "title": "Action Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "status",
+          "action_id",
+          "machine_id",
+          "action_type"
+        ],
+        "title": "MachineActionResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.stop_and_quarantine_file",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    },
+    {
+      "name": "list_alerts",
+      "description": "List Alerts in the connected Defender for Endpoint tenant, optionally filtered by an OData $filter (e.g. \"severity eq 'High'\").",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Defender for Endpoint tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "filter_expr": {
+            "default": "",
+            "description": "Optional OData $filter, e.g. \"severity eq 'High'\".",
+            "title": "Filter Expr",
+            "type": "string"
+          },
+          "limit": {
+            "default": 50,
+            "description": "Max alerts to return (1-500).",
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "ListAlertsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "DefenderAlert": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "title": "Status",
+                "type": "string"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "alert_id": {
+                "title": "Alert Id",
+                "type": "string"
+              },
+              "severity": {
+                "title": "Severity",
+                "type": "string"
+              },
+              "category": {
+                "title": "Category",
+                "type": "string"
+              },
+              "machine_id": {
+                "title": "Machine Id",
+                "type": "string"
+              },
+              "created": {
+                "title": "Created",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "status",
+              "alert_id",
+              "severity",
+              "category",
+              "machine_id",
+              "created"
+            ],
+            "title": "DefenderAlert",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "alerts": {
+            "default": [],
+            "items": {
+              "$ref": "#/$defs/DefenderAlert"
+            },
+            "title": "Alerts",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "AlertList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.list_alerts",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    },
+    {
+      "name": "get_alert",
+      "description": "Read one Alert in full by its Defender alert id.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Defender for Endpoint tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "alert_id": {
+            "description": "Defender alert id.",
+            "title": "Alert Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "alert_id"
+        ],
+        "title": "AlertIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "alert_id": {
+            "title": "Alert Id",
+            "type": "string"
+          },
+          "severity": {
+            "title": "Severity",
+            "type": "string"
+          },
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "machine_id": {
+            "title": "Machine Id",
+            "type": "string"
+          },
+          "created": {
+            "title": "Created",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "status",
+          "alert_id",
+          "severity",
+          "category",
+          "machine_id",
+          "created"
+        ],
+        "title": "DefenderAlert",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.get_alert",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    },
+    {
+      "name": "update_alert",
+      "description": "Update an Alert's status, classification, determination, and/or assignment.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "defender.alert.updated"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Defender for Endpoint tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "alert_id": {
+            "description": "Defender alert id.",
+            "title": "Alert Id",
+            "type": "string"
+          },
+          "status": {
+            "default": "",
+            "description": "New status: 'New', 'InProgress', or 'Resolved'. Leave empty to not change.",
+            "title": "Status",
+            "type": "string"
+          },
+          "classification": {
+            "default": "",
+            "description": "'TruePositive', 'FalsePositive', or 'Unknown'. Leave empty to not change.",
+            "title": "Classification",
+            "type": "string"
+          },
+          "determination": {
+            "default": "",
+            "description": "Determination detail, e.g. 'Malware', 'SecurityPersonnel', 'Other'.",
+            "title": "Determination",
+            "type": "string"
+          },
+          "assigned_to": {
+            "default": "",
+            "description": "Email of the analyst to assign this alert to. Leave empty to not change.",
+            "title": "Assigned To",
+            "type": "string"
+          },
+          "comment": {
+            "default": "",
+            "description": "Optional comment to add to the alert.",
+            "title": "Comment",
+            "type": "string"
+          }
+        },
+        "required": [
+          "alert_id"
+        ],
+        "title": "UpdateAlertParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "alert_id": {
+            "title": "Alert Id",
+            "type": "string"
+          },
+          "severity": {
+            "title": "Severity",
+            "type": "string"
+          },
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "machine_id": {
+            "title": "Machine Id",
+            "type": "string"
+          },
+          "created": {
+            "title": "Created",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "status",
+          "alert_id",
+          "severity",
+          "category",
+          "machine_id",
+          "created"
+        ],
+        "title": "DefenderAlert",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.update_alert",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    },
+    {
+      "name": "list_indicators",
+      "description": "List custom Indicators (IOCs) configured on the connected Defender for Endpoint tenant.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Defender for Endpoint tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "limit": {
+            "default": 50,
+            "description": "Max indicators to return (1-500).",
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "ListIndicatorsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "DefenderIndicator": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "indicator_id": {
+                "title": "Indicator Id",
+                "type": "string"
+              },
+              "indicator_type": {
+                "title": "Indicator Type",
+                "type": "string"
+              },
+              "indicator_value": {
+                "title": "Indicator Value",
+                "type": "string"
+              },
+              "action": {
+                "title": "Action",
+                "type": "string"
+              },
+              "severity": {
+                "title": "Severity",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "indicator_id",
+              "indicator_type",
+              "indicator_value",
+              "action",
+              "severity"
+            ],
+            "title": "DefenderIndicator",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "indicators": {
+            "default": [],
+            "items": {
+              "$ref": "#/$defs/DefenderIndicator"
+            },
+            "title": "Indicators",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "IndicatorList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.list_indicators",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    },
+    {
+      "name": "create_indicator",
+      "description": "Create a custom Indicator (IOC) on the connected Defender for Endpoint tenant to flag or block a hash, IP, domain, or URL fleet-wide.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "defender.indicator.created"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Defender for Endpoint tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "indicator_type": {
+            "description": "Indicator type: 'FileSha1', 'FileSha256', 'IpAddress', 'DomainName', or 'Url'.",
+            "title": "Indicator Type",
+            "type": "string"
+          },
+          "indicator_value": {
+            "description": "The actual indicator value (hash, IP, domain, or URL).",
+            "title": "Indicator Value",
+            "type": "string"
+          },
+          "action": {
+            "default": "Alert",
+            "description": "Action Defender takes: 'Alert', 'AlertAndBlock', 'Block', 'Allowed', or 'BlockAndRemediate'.",
+            "title": "Action",
+            "type": "string"
+          },
+          "title": {
+            "description": "Short title for this indicator, shown in the console.",
+            "title": "Title",
+            "type": "string"
+          },
+          "description": {
+            "description": "Longer description of why this indicator was added.",
+            "title": "Description",
+            "type": "string"
+          },
+          "severity": {
+            "default": "Medium",
+            "description": "'Informational', 'Low', 'Medium', or 'High'.",
+            "title": "Severity",
+            "type": "string"
+          }
+        },
+        "required": [
+          "indicator_type",
+          "indicator_value",
+          "title",
+          "description"
+        ],
+        "title": "CreateIndicatorParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "indicator_id": {
+            "title": "Indicator Id",
+            "type": "string"
+          },
+          "indicator_type": {
+            "title": "Indicator Type",
+            "type": "string"
+          },
+          "indicator_value": {
+            "title": "Indicator Value",
+            "type": "string"
+          },
+          "action": {
+            "title": "Action",
+            "type": "string"
+          },
+          "severity": {
+            "title": "Severity",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "indicator_id",
+          "indicator_type",
+          "indicator_value",
+          "action",
+          "severity"
+        ],
+        "title": "DefenderIndicator",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.create_indicator",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    },
+    {
+      "name": "delete_indicator",
+      "description": "Delete a custom Indicator (IOC) from the connected Defender for Endpoint tenant.",
+      "action_type": "destructive",
+      "chain_callable": true,
+      "effects": [
+        "defender.indicator.deleted"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Defender for Endpoint tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "indicator_id": {
+            "description": "Defender custom indicator id.",
+            "title": "Indicator Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "indicator_id"
+        ],
+        "title": "IndicatorIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          },
+          "detail": {
+            "default": "",
+            "title": "Detail",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "ok"
+        ],
+        "title": "DeleteResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.delete_indicator",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    },
+    {
+      "name": "run_hunting_query",
+      "description": "Run an Advanced Hunting KQL query against the connected Defender for Endpoint tenant (e.g. \"DeviceProcessEvents | take 10\"). Read-only investigation.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Defender for Endpoint tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "query": {
+            "description": "Advanced Hunting KQL query, e.g. \"DeviceProcessEvents | take 10\".",
+            "title": "Query",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "RunHuntingQueryParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "columns": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Columns",
+            "type": "array"
+          },
+          "rows": {
+            "default": [],
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Rows",
+            "type": "array"
+          },
+          "row_count": {
+            "default": 0,
+            "title": "Row Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "HuntingResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.run_hunting_query",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    },
+    {
+      "name": "list_vulnerabilities",
+      "description": "List CVEs (Threat & Vulnerability Management) exposed across the fleet or on one machine.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Defender for Endpoint tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "machine_id": {
+            "default": "",
+            "description": "Optional: restrict to CVEs exposed on this one machine id.",
+            "title": "Machine Id",
+            "type": "string"
+          },
+          "limit": {
+            "default": 50,
+            "description": "Max results to return (1-500).",
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "ListVulnerabilitiesParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "Vulnerability": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "cve_id": {
+                "title": "Cve Id",
+                "type": "string"
+              },
+              "severity": {
+                "title": "Severity",
+                "type": "string"
+              },
+              "cvss_score": {
+                "default": 0.0,
+                "title": "Cvss Score",
+                "type": "number"
+              },
+              "machine_id": {
+                "title": "Machine Id",
+                "type": "string"
+              },
+              "software_name": {
+                "title": "Software Name",
+                "type": "string"
+              },
+              "software_vendor": {
+                "title": "Software Vendor",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "cve_id",
+              "severity",
+              "machine_id",
+              "software_name",
+              "software_vendor"
+            ],
+            "title": "Vulnerability",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "vulnerabilities": {
+            "default": [],
+            "items": {
+              "$ref": "#/$defs/Vulnerability"
+            },
+            "title": "Vulnerabilities",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "VulnerabilityList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.list_vulnerabilities",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    },
+    {
+      "name": "audit_estate",
+      "description": "Build one aggregated health report across the connected Defender for Endpoint tenant: machine counts by health/isolation state, open/high-severity alerts, and critical CVE exposure.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Defender for Endpoint tenant connection ID. Omit to use the first connected tenant.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "title": "ConnectionRefParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "total_machines": {
+            "title": "Total Machines",
+            "type": "integer"
+          },
+          "active_machines": {
+            "title": "Active Machines",
+            "type": "integer"
+          },
+          "isolated_machines": {
+            "title": "Isolated Machines",
+            "type": "integer"
+          },
+          "stale_machines": {
+            "title": "Stale Machines",
+            "type": "integer"
+          },
+          "open_alerts": {
+            "title": "Open Alerts",
+            "type": "integer"
+          },
+          "high_severity_alerts": {
+            "title": "High Severity Alerts",
+            "type": "integer"
+          },
+          "critical_cves_exposed": {
+            "title": "Critical Cves Exposed",
+            "type": "integer"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "total_machines",
+          "active_machines",
+          "isolated_machines",
+          "stale_machines",
+          "open_alerts",
+          "high_severity_alerts",
+          "critical_cves_exposed",
+          "summary"
+        ],
+        "title": "EstateAudit",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "microsoft-defender-endpoint-connector.audit_estate",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "microsoft_defender_endpoint"
+    }
+  ],
+  "signals": [],
+  "schedules": [],
+  "required_scopes": [],
+  "icon_size_bytes": 608,
+  "lifecycle": {
+    "health_check": {
+      "interval_sec": 60
+    }
+  },
+  "secrets": [
+    {
+      "name": "defender_connections",
+      "description": "JSON list of connected Defender for Endpoint tenants and encrypted credentials. Managed only through connect_defender and disconnect_defender.",
+      "required": true,
+      "write_mode": "both",
+      "max_bytes": 65536,
+      "scope": "user",
+      "rotation_hint_days": 90
+    }
+  ],
+  "panels": [
+    {
+      "panel_id": "secrets",
+      "slot": "right",
+      "title": "Secrets",
+      "tree": {},
+      "icon": "KeyRound",
+      "refresh": "manual",
+      "center_overlay": false
+    },
+    {
+      "panel_id": "defender_sidebar",
+      "slot": "left",
+      "title": "Microsoft Defender for Endpoint",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": false
+    },
+    {
+      "panel_id": "defender_connect_help",
+      "slot": "overlay",
+      "title": "Как зарегистрировать Azure AD App?",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": false
+    },
+    {
+      "panel_id": "defender_center",
+      "slot": "center",
+      "title": "",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": false
+    },
+    {
+      "panel_id": "defender_machines",
+      "slot": "center",
+      "title": "Machines",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "defender_alerts",
+      "slot": "center",
+      "title": "Alerts",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "defender_indicators",
+      "slot": "center",
+      "title": "Indicators",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "defender_vulnerabilities",
+      "slot": "center",
+      "title": "Vulnerabilities",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "defender_settings",
+      "slot": "center",
+      "title": "Microsoft Defender for Endpoint settings",
+      "tree": {},
+      "icon": "Settings",
+      "refresh": "manual",
+      "center_overlay": true
+    }
+  ]
+}

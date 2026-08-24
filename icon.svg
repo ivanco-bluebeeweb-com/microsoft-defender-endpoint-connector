@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Microsoft Defender for Endpoint Connector">
+  <defs>
+    <linearGradient id="bg" x1="14" y1="12" x2="114" y2="118" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00A4EF"/>
+      <stop offset="1" stop-color="#0067B8"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="112" height="112" rx="24" fill="url(#bg)"/>
+  <path d="M64 28 L94 40 V66 C94 88 80 100 64 108 C48 100 34 88 34 66 V40 Z" fill="#FFFFFF"/>
+  <path d="M64 40 L84 48 V66 C84 82 74 91 64 97 C54 91 44 82 44 66 V48 Z" fill="#0067B8"/>
+</svg>
