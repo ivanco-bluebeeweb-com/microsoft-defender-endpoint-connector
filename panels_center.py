@@ -11,8 +11,8 @@ import defender_client as dc
 
 def _sev_badge(sev: str) -> ui.UINode:
     s = (sev or "").lower()
-    variant = "error" if s in ("critical", "high") else ("warning" if s == "medium" else "default")
-    return ui.Badge(text=sev or "unknown", variant=variant)
+    color = "red" if s in ("critical", "high") else ("yellow" if s == "medium" else "gray")
+    return ui.Badge(label=sev or "unknown", color=color)
 
 
 @ext.panel("defender_center", slot="center")

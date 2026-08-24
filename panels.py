@@ -36,7 +36,7 @@ async def defender_sidebar(ctx, **kwargs) -> ui.UINode:
         return ui.Stack(direction="v", gap=3, align="stretch", children=[
             ui.Button("Как зарегистрировать Azure AD App?", variant="ghost", size="sm", icon="HelpCircle",
                       on_click=ui.Call("__panel__defender_connect_help")),
-            ui.Form(action="connect_defender", submit_label="Подключить тенант", full_width=True, children=[
+            ui.Form(action="connect_defender", submit_label="Подключить тенант", children=[
                 ui.Stack(direction="v", gap=1, align="stretch", children=[
                     ui.Text("Название (опционально)", variant="caption"),
                     ui.Input(param_name="label", placeholder="Acme Corp Tenant"),
@@ -51,7 +51,7 @@ async def defender_sidebar(ctx, **kwargs) -> ui.UINode:
                 ]),
                 ui.Stack(direction="v", gap=1, align="stretch", children=[
                     ui.Text("Client Secret", variant="caption"),
-                    ui.Input(param_name="client_secret", type="password", placeholder="Значение секрета Azure AD App"),
+                    ui.Password(param_name="client_secret", placeholder="Значение секрета Azure AD App"),
                 ]),
             ]),
         ])
@@ -70,7 +70,7 @@ async def defender_sidebar(ctx, **kwargs) -> ui.UINode:
 
 @ext.panel("defender_connect_help", slot="overlay", title="Как зарегистрировать Azure AD App?")
 async def defender_connect_help(ctx, **kwargs) -> ui.UINode:
-    return ui.Markdown(text=(
+    return ui.Markdown(content=(
         "**Azure Portal > Microsoft Entra ID > App registrations > New registration.**\n\n"
         "1. Создайте регистрацию (Single tenant).\n"
         "2. **API permissions** > Add a permission > **WindowsDefenderATP** > Application permissions:\n"
