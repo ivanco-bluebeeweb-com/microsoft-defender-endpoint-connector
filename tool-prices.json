@@ -1,0 +1,20 @@
+{
+  "connect_defender": 0,
+  "disconnect_defender": 0,
+  "list_connections": 0,
+  "list_machines": 8,
+  "get_machine": 8,
+  "list_alerts": 8,
+  "get_alert": 8,
+  "list_indicators": 8,
+  "list_vulnerabilities": 8,
+  "isolate_machine": 16,
+  "unisolate_machine": 16,
+  "update_alert": 16,
+  "create_indicator": 16,
+  "delete_indicator": 16,
+  "run_av_scan": 20,
+  "stop_and_quarantine_file": 20,
+  "run_hunting_query": 20,
+  "audit_estate": 40
+}
