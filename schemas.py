@@ -90,6 +90,8 @@ class ListVulnerabilitiesParams(ConnectionRefParams):
 
 
 class DefenderConnection(sdl.Entity):
+    id: str = ""
+    title: str = ""
     connection_id: str
     label: str
     tenant_id: str
@@ -97,15 +99,21 @@ class DefenderConnection(sdl.Entity):
 
 
 class ConnectionList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     connections: list[DefenderConnection] = []
 
 
 class DeleteResult(sdl.Entity):
+    id: str = ""
+    title: str = ""
     ok: bool
     detail: str = ""
 
 
 class DefenderMachine(sdl.Entity):
+    id: str = ""
+    title: str = ""
     machine_id: str
     computer_dns_name: str
     os_platform: str
@@ -116,10 +124,14 @@ class DefenderMachine(sdl.Entity):
 
 
 class MachineList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     machines: list[DefenderMachine] = []
 
 
 class MachineActionResult(sdl.Entity):
+    id: str = ""
+    title: str = ""
     action_id: str
     machine_id: str
     status: str
@@ -127,6 +139,7 @@ class MachineActionResult(sdl.Entity):
 
 
 class DefenderAlert(sdl.Entity):
+    id: str = ""
     alert_id: str
     title: str
     severity: str
@@ -137,10 +150,13 @@ class DefenderAlert(sdl.Entity):
 
 
 class AlertList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     alerts: list[DefenderAlert] = []
 
 
 class DefenderIndicator(sdl.Entity):
+    id: str = ""
     indicator_id: str
     indicator_type: str
     indicator_value: str
@@ -150,16 +166,22 @@ class DefenderIndicator(sdl.Entity):
 
 
 class IndicatorList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     indicators: list[DefenderIndicator] = []
 
 
 class HuntingResult(sdl.Entity):
+    id: str = ""
+    title: str = ""
     columns: list[str] = []
     rows: list[dict] = []
     row_count: int = 0
 
 
 class Vulnerability(sdl.Entity):
+    id: str = ""
+    title: str = ""
     cve_id: str
     severity: str
     cvss_score: float = 0.0
@@ -169,10 +191,14 @@ class Vulnerability(sdl.Entity):
 
 
 class VulnerabilityList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     vulnerabilities: list[Vulnerability] = []
 
 
 class EstateAudit(sdl.Entity):
+    id: str = ""
+    title: str = ""
     total_machines: int
     active_machines: int
     isolated_machines: int
