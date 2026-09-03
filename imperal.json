@@ -3042,5 +3042,36 @@
       "refresh": "manual",
       "center_overlay": true
     }
-  ]
+  ],
+  "pricing": {
+    "model": "per_action",
+    "currency": "credits",
+    "monthly_price": 0,
+    "free_tools": [
+      "connect_defender",
+      "disconnect_defender",
+      "list_connections"
+    ],
+    "tool_prices": {
+      "connect_defender": 0,
+      "disconnect_defender": 0,
+      "list_connections": 0,
+      "list_machines": 8,
+      "get_machine": 8,
+      "isolate_machine": 16,
+      "unisolate_machine": 16,
+      "run_av_scan": 16,
+      "stop_and_quarantine_file": 16,
+      "list_alerts": 8,
+      "get_alert": 8,
+      "update_alert": 16,
+      "list_indicators": 8,
+      "create_indicator": 16,
+      "delete_indicator": 16,
+      "run_hunting_query": 16,
+      "list_vulnerabilities": 8,
+      "audit_estate": 20
+    },
+    "notes": "Standard platform scale {0, 8, 16, 20, 40}. 0 = access setup and harmless discovery. 8 = read/list/search. 16 = standard single mutation/CRUD. 20 = bulk or heavy audit operation."
+  }
 }
