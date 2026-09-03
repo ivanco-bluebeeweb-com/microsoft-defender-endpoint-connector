@@ -24,8 +24,7 @@ from handlers_connection import _load_connections
 
 def _settings_button() -> ui.UINode:
     return ui.Button(
-        "App settings", variant="secondary", size="sm", full_width=True,
-        icon="Settings", on_click=ui.Call("__panel__defender_settings"),
+        "App settings", variant="secondary", size="sm", icon="Settings", on_click=ui.Call("__panel__defender_settings"),
     )
 
 
@@ -36,6 +35,9 @@ async def defender_sidebar(ctx, **kwargs) -> ui.UINode:
         return ui.Stack(direction="v", gap=3, align="stretch", children=[
             ui.Button("Как зарегистрировать Azure AD App?", variant="ghost", size="sm", icon="HelpCircle",
                       on_click=ui.Call("__panel__defender_connect_help")),
+            ui.Button("Sign in with Microsoft (Azure AD SSO)", variant="primary", size="sm", icon="login"),
+            ui.Divider(),
+            ui.Text("Or connect via Azure AD App Registration", variant="caption"),
             ui.Form(action="connect_defender", submit_label="Подключить тенант", children=[
                 ui.Stack(direction="v", gap=1, align="stretch", children=[
                     ui.Text("Название (опционально)", variant="caption"),
@@ -59,10 +61,10 @@ async def defender_sidebar(ctx, **kwargs) -> ui.UINode:
     return ui.Stack(direction="v", gap=3, align="stretch", children=[
         ui.Text(c.get("label") or c.get("tenant_id", ""), variant="body"),
         ui.Divider(),
-        ui.Button("Machines", variant="ghost", full_width=True, icon="Laptop", on_click=ui.Call("__panel__defender_machines")),
-        ui.Button("Alerts", variant="ghost", full_width=True, icon="ShieldAlert", on_click=ui.Call("__panel__defender_alerts")),
-        ui.Button("Indicators", variant="ghost", full_width=True, icon="Target", on_click=ui.Call("__panel__defender_indicators")),
-        ui.Button("Vulnerabilities", variant="ghost", full_width=True, icon="Bug", on_click=ui.Call("__panel__defender_vulnerabilities")),
+        ui.Button("Machines", variant="ghost", icon="Laptop", on_click=ui.Call("__panel__defender_machines")),
+        ui.Button("Alerts", variant="ghost", icon="ShieldAlert", on_click=ui.Call("__panel__defender_alerts")),
+        ui.Button("Indicators", variant="ghost", icon="Target", on_click=ui.Call("__panel__defender_indicators")),
+        ui.Button("Vulnerabilities", variant="ghost", icon="Bug", on_click=ui.Call("__panel__defender_vulnerabilities")),
         ui.Divider(),
         _settings_button(),
     ])
